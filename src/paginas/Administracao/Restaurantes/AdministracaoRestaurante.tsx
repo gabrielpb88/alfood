@@ -1,6 +1,7 @@
 import IRestaurante from '../../../interfaces/IRestaurante';
 import React, { useEffect, useState } from 'react';
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -11,7 +12,7 @@ import {
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faPenToSquare, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 
 export default function AdministracaoRestaurantes() {
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
@@ -20,6 +21,16 @@ export default function AdministracaoRestaurantes() {
       setRestaurantes(resposta.data);
     });
   }, []);
+
+  function excluirRestaurante(restaurante: IRestaurante) {
+    axios
+      .delete(`http://localhost:8000/api/v2/restaurantes/${restaurante.id}/`)
+      .then((result) => {
+        setRestaurantes((prevState) =>
+          prevState.filter((r) => r.id !== restaurante.id),
+        );
+      });
+  }
   return (
     <>
       <TableContainer>
@@ -28,6 +39,7 @@ export default function AdministracaoRestaurantes() {
             <TableRow>
               <TableCell>Nome</TableCell>
               <TableCell>Editar</TableCell>
+              <TableCell>Excluir</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -38,6 +50,16 @@ export default function AdministracaoRestaurantes() {
                   <Link to={`/admin/restaurantes/${restaurante.id}`}>
                     <FontAwesomeIcon icon={faPenToSquare} />
                   </Link>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={() => {
+                      excluirRestaurante(restaurante);
+                    }}>
+                    <FontAwesomeIcon icon={faTrashAlt} />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
