@@ -20,7 +20,7 @@ const Restaurante = ({ restaurante }: RestauranteProps) => {
       .then((resposta) => {
         setPratos(resposta.data);
       });
-  }, []);
+  }, [restaurante.id]);
 
   return (
     <section className={estilos.Restaurante}>
