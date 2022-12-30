@@ -7,11 +7,6 @@ import http from '../../../http';
 export default function FormularioRestaurante() {
   const [nomeRestaurante, setNomeRestaurente] = useState('');
   const { id } = useParams();
-  useEffect(() => {
-    http.get<IRestaurante>(`restaurantes/${id}/`).then((resposta) => {
-      setNomeRestaurente(resposta.data.nome);
-    });
-  }, [id]);
 
   function isEdicao() {
     return !!id;
@@ -37,17 +32,27 @@ export default function FormularioRestaurante() {
         });
     }
   }
+
+  useEffect(() => {
+    if (isEdicao()) {
+      http.get<IRestaurante>(`restaurantes/${id}/`).then((resposta) => {
+        setNomeRestaurente(resposta.data.nome);
+      });
+    }
+  });
+
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        flexGrow: 1,
       }}>
       <Typography component="h1" variant="h6">
         Formulário de Restaurantes
       </Typography>
-      <Box component="form" onSubmit={aoSubmeterForm}>
+      <Box component="form" sx={{ width: '100%' }} onSubmit={aoSubmeterForm}>
         <TextField
           value={nomeRestaurante}
           onChange={(e) => {
@@ -59,7 +64,7 @@ export default function FormularioRestaurante() {
           required
         />
         <Button
-          sx={{ marginTop: '0.5rem' }}
+          sx={{ marginTop: 1 }}
           type="submit"
           variant="outlined"
           fullWidth>
