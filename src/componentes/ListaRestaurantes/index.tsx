@@ -1,10 +1,17 @@
 import IRestaurante from '../../interfaces/IRestaurante';
 import style from './ListaRestaurantes.module.scss';
 import Restaurante from './Restaurante';
-import { FormEvent, useEffect, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import { IPaginacao } from '../../interfaces/IPaginacao';
-import { Button, TextField } from '@mui/material';
+import {
+  Button,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from '@mui/material';
+import http from '../../http';
 
 interface IParametrosBusca {
   ordering?: 'nome' | 'id';
@@ -14,6 +21,11 @@ const ListaRestaurantes = () => {
   const [restaurantes, setRestaurentes] = useState<IRestaurante[]>([]);
   const [proximaPagina, setProximaPagina] = useState('');
   const [busca, setBusca] = useState('');
+  const [ordering, setOrdering] = useState<'id' | 'nome'>('nome');
+
+  function handleChange(event: SelectChangeEvent) {
+    setOrdering(event.target.value as 'id' | 'nome');
+  }
 
   useEffect(() => {
     axios
@@ -41,11 +53,12 @@ const ListaRestaurantes = () => {
     if (busca) {
       opcoes.params.search = busca;
     }
-    axios
-      .get(`http://localhost:8000/api/v2/restaurantes/`, opcoes)
-      .then((result) => {
-        setRestaurentes(result.data);
-      });
+    if (ordering) {
+      opcoes.params.ordering = ordering;
+    }
+    http.get(`restaurantes/`, opcoes).then((result) => {
+      setRestaurentes(result.data);
+    });
   }
 
   return (
@@ -53,7 +66,7 @@ const ListaRestaurantes = () => {
       <h1>
         Os restaurantes mais <em>bacanas</em>!
       </h1>
-      <form onSubmit={buscarRestaurante}>
+      <form className={style.FormBusca} onSubmit={buscarRestaurante}>
         <TextField
           variant="standard"
           label="Nome do Restaurante"
@@ -62,6 +75,10 @@ const ListaRestaurantes = () => {
             setBusca(e.target.value);
           }}
         />
+        <Select value={ordering} onChange={handleChange}>
+          <MenuItem value="nome">Nome</MenuItem>
+          <MenuItem value="id">Id</MenuItem>
+        </Select>
         <Button type="submit">Buscar</Button>
       </form>
       {restaurantes?.map((item) => (
