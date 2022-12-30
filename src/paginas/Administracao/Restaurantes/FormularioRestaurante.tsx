@@ -1,18 +1,16 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import React, { FormEvent, useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import IRestaurante from '../../../interfaces/IRestaurante';
+import http from '../../../http';
 
 export default function FormularioRestaurante() {
   const [nomeRestaurante, setNomeRestaurente] = useState('');
   const { id } = useParams();
   useEffect(() => {
-    axios
-      .get<IRestaurante>(`http://localhost:8000/api/v2/restaurantes/${id}/`)
-      .then((resposta) => {
-        setNomeRestaurente(resposta.data.nome);
-      });
+    http.get<IRestaurante>(`restaurantes/${id}/`).then((resposta) => {
+      setNomeRestaurente(resposta.data.nome);
+    });
   }, [id]);
 
   function isEdicao() {
@@ -22,16 +20,16 @@ export default function FormularioRestaurante() {
   function aoSubmeterForm(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
     if (isEdicao()) {
-      axios
-        .put(`http://localhost:8000/api/v2/restaurantes/${id}/`, {
+      http
+        .put(`restaurantes/${id}/`, {
           nome: nomeRestaurante,
         })
         .then(() => {
           alert('Restaurente atualizado com sucesso.');
         });
     } else {
-      axios
-        .post(`http://localhost:8000/api/v2/restaurantes/`, {
+      http
+        .post(`restaurantes/`, {
           nome: nomeRestaurante,
         })
         .then(() => {
