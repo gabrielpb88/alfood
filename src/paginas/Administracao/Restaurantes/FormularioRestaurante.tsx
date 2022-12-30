@@ -1,5 +1,5 @@
-import { Button, TextField } from '@mui/material';
-import { FormEvent, useEffect, useState } from 'react';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import React, { FormEvent, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import IRestaurante from '../../../interfaces/IRestaurante';
@@ -40,22 +40,34 @@ export default function FormularioRestaurante() {
     }
   }
   return (
-    <form
-      onSubmit={(e) => {
-        aoSubmeterForm(e);
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
       }}>
-      <TextField
-        value={nomeRestaurante}
-        onChange={(e) => {
-          setNomeRestaurente(e.target.value);
-        }}
-        id="standard-basic"
-        label="Nome do restaurante"
-        variant="standard"
-      />
-      <Button type="submit" variant="outlined">
-        Salvar
-      </Button>
-    </form>
+      <Typography component="h1" variant="h6">
+        Formulário de Restaurantes
+      </Typography>
+      <Box component="form" onSubmit={aoSubmeterForm}>
+        <TextField
+          value={nomeRestaurante}
+          onChange={(e) => {
+            setNomeRestaurente(e.target.value);
+          }}
+          label="Nome do restaurante"
+          variant="standard"
+          fullWidth
+          required
+        />
+        <Button
+          sx={{ marginTop: '0.5rem' }}
+          type="submit"
+          variant="outlined"
+          fullWidth>
+          Salvar
+        </Button>
+      </Box>
+    </Box>
   );
 }
