@@ -2,6 +2,8 @@
 
 # Alfood
 
+Este repositório contem o projeto já finalizado que foi utilizado durante todo o curso [React: integrando seu projeto React com APIs](https://cursos.alura.com.br/course/react-integrando-projeto-react-apis) da Alura.
+
 O Alfood é um site que lista restaurantes e pratos do menu. 
 É um MVP que tá só começando e ainda tem muitas funcionalidades novas para serem desenvolvidas.
 
